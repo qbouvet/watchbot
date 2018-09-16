@@ -1,0 +1,61 @@
+TODO
+
+    general pi powersaving
+
+    fixed ip
+
+    LED powersave via gpio-controlled relay
+
+    app architecture for remote storage
+    
+        debug the simplified architecture (streamsplitter as the output of picamera) with stackoverflow
+    Improve streaming architecture
+
+            group conversation
+            send photos with notifications
+        telegram bot
+        camera : simultaneous photo + video
+    Various uprioritized features 
+    
+        preset detection from user agent
+        client now sends the wanted quality preset
+        settings tab with multiple presets
+            https://codepen.io/dapacreative/pen/PqXxoP
+            https://speckyboy.com/10-simple-code-snippets-creating-beautiful-tabs/
+        tabbed layout
+    webapp
+
+
+TESTING
+
+        add graceful exit + ping client
+
+DONE
+
+            pure python / picamera stream version
+            raspivid stream version
+            rewrite stream-split
+        convert websocket / streaming server to python
+        convert http server to python / tornado
+        Split nodejs code into httpserver and websocketserver
+    port git-h264-live-player to pure python
+
+    register / ping over telegram bot
+
+    "h264 streaming over http/websocket" Proof of concept from borrowed nodejs code
+
+    Basic photo and video
+
+        multiple callback
+        motion detection
+    PIR Sensor 
+
+    3-setup-user.sh
+
+    2-setup-system.sh
+
+    1-mksdcard.sh
+        nm-profiles
+        sh+hostname setup
+        wifi-autoconnect
+        arch linux extract script

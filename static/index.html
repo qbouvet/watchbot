@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>h264-live-player web client demo</title>
+  </head>
+  <body>
+
+    <h1>web streaming [Tornado]</h1>
+    <button type="button" onclick="wsavc.playStream()">Start Video</button>
+    <button type="button" onclick="wsavc.stopStream()">Stop Video</button>
+    <button type="button" onclick="wsavc.disconnect()">Disconnect</button>
+    <br/>
+
+  <!-- provide WSAvcPlayer -->
+    <script type="text/javascript" src="http-live-player.js">;</script>
+    <script type="text/javascript">
+
+var canvas = document.createElement("canvas");
+document.body.appendChild(canvas);
+
+// Create h264 player
+//alert("document.location.host="+document.location.host)
+    // derive ws address from current address by adding 1 to the port
+//var current_address = document.location.host.split(":")[0]
+//var ws_port = parseInt(document.location.host.split(":")[1]) + 1
+var uri = "ws://" + document.location.host + "/websocket"
+    // connect ws
+//alert("Websocket URI is "+uri)
+var wsavc = new WSAvcPlayer(canvas, "webgl", 1, 35);
+wsavc.connect(uri);
+
+
+//expose instance for button callbacks
+window.wsavc = wsavc;
+
+    </script>
+  </body>
+</html>

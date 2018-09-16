@@ -1,0 +1,68 @@
+$blue: #1E88E5;
+$width: 20%;
+
+*:focus {
+  outline: 1px dotted blue;
+}
+
+.tabs {
+  & > ul {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 0;
+    .indicator {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      width: $width;
+      background: $blue;
+      transform: translateZ(0) translateX(0);
+      transition: all 0.3s ease;
+    }
+    li {
+      display: inline-block;
+      font-size: 14px;
+      width: $width;
+      a {
+        display: block;
+        position: relative;
+        overflow: hidden;
+        padding: 20px;
+        text-decoration: none;
+        text-align: center;
+        font-weight: bold;
+        color: black;
+        transition: all 0.3s ease 0.4s;
+        &:before {
+          content: '';
+          display: block;
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          top: 0;
+          background: $blue;
+          transform: translateZ(0) translateY(100%);
+          transition: all 0.3s ease 0.3s;
+          z-index: -1;
+        }
+        &[aria-selected] {
+          color: white;
+          &:before {
+            transform: translateZ(0) translateY(0);
+          }
+        }
+      }
+    }
+  }
+  & > section {
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+}
