@@ -9,9 +9,8 @@ import time
 
 
 """
-    TODO : handle multiple callbacks in here
 
-	Author : Quentin Bouvet
+    Author : Quentin Bouvet
 """
     
 class PIRManager : 

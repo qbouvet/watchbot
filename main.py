@@ -28,7 +28,6 @@ stamp("(2/4) PIR sensor ready")
 cam = CameraWrapper()
 stamp("(3/4) Camera wrapper initialized")
 
-stamp("(4/4) Starting webserver")
 httpserver = WebServerApp(cam)
 httpserver.start()
 stamp("(4/4) Webserver ready")

@@ -4608,8 +4608,6 @@ function(){
 
               disconnect : function() {
                 alert("Disconnecting")
-                this.ws.send("STOPSTREAM");
-                log("Sent STOPSTREAM");
                 this.ws.close();
               },
 

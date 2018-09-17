@@ -48,10 +48,10 @@ class WebServerApp (Thread) :
         self.daemon=True
         self.app = tornado.web.Application(
             [   (r"/websocket", StreamHandler, {'camerawrapper' : camerawrapper}),
-                (r"/(.*)", tornado.web.StaticFileHandler, {"path": http_static, "default_filename": "index.html"})
-            ],
-            websocket_ping_interval=WS_PING_INTERVAL, 
-            websocket_ping_timeout=WS_NB_PING_TIMEOUT
+                (r"/(.*)", tornado.web.StaticFileHandler, {"path": STATIC_WEB_RESSOURCES, "default_filename": "index.html"})
+            ]
+            #,websocket_ping_interval=WS_PING_INTERVAL
+            #,websocket_ping_timeout=WS_NB_PING_TIMEOUT
         )
         self.port = 8384
         self.process = None
@@ -60,12 +60,8 @@ class WebServerApp (Thread) :
         asyncio.set_event_loop(asyncio.new_event_loop())
         self.app.listen(self.port)
         tornado.ioloop.IOLoop.instance().start()
-    
-    #def start (self) : 
-    #    self.process = multiprocessing.Process(target=self.run)
-    #    self.process.daemon = True
-    #    self.process.run()
-        
+
+
 
 class StreamHandler (WebSocketHandler) : 
     

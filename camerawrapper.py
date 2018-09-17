@@ -26,58 +26,57 @@ from config import *
 class CameraWrapper : 
 
     def __init__(self) : 
-        self.streamprocess = None
+        self.StreamProcessingThread = None
         self.camera = None
-        self.camstream = None
+        self.cameraOutput = None
         self.streamsplitter = None
     
     def shutdown(self) : 
         stamp("Shutting down ...", name="CameraWrapper") 
-        if not self.streamprocess is None :
-            if self.streamprocess.is_alive() : 
-                self.streamprocess.terminate()
-                self.streamprocess.join()
-                self.streamprocess = None
-                stamp("    streamprocess terminated", name="CameraWrapper") 
+        if not self.StreamProcessingThread is None :
+            if self.StreamProcessingThread.is_alive() : 
+                self.StreamProcessingThread.terminate()
+                self.StreamProcessingThread.join()
+                self.StreamProcessingThread = None
+                stamp("    StreamProcessingThread terminated", name="CameraWrapper") 
         if not self.camera is None : 
             # most important for power saving
             self.camera.close()
             self.camera = None
             stamp("    picamera closed", name="CameraWrapper") 
-        if not self.camstream is None : 
-            self.camstream = None
+        if not self.cameraOutput is None : 
+            self.cameraOutput = None
         if not self.streamsplitter is None : 
             self.streamsplitter = None
         stamp("Done", name="CameraWrapper") 
-    
-    def save_picture(self, filename) : 
-        stamp("Not implemented")
 
-    def start_stream(self, callbackFunction) :
+    def start_stream (self, callbackFunction) : 
+        self.start_stream_thread(callbackFunction)
+
+    def start_stream_thread (self, callbackFunction) : 
         
-        debug("start_stream() called", name="camerawrapper")
-            
+        debug("start_stream_thread() called", name="camerawrapper")
+        
         if not self.streamsplitter is None : 
             stamp("CameraWrapper::stream_to_websocket() : streamsplitter exists already")
             return
         self.streamsplitter = StreamSplitter(STREAM_SEPARATOR, callbackFunction)
         
-        if not self.camstream is None : 
-            stamp("CameraWrapper::stream_to_websocket() : camstream is already opened")
+        if not self.cameraOutput is None : 
+            stamp("CameraWrapper::stream_to_websocket() : cameraOutput is already opened")
             return
-        self.camstream = FifoBytesIO()
         #   For testing, use : 
-        #self.camstream = DelayedBytesIo("sample2.h264", 50000)
+        #self.cameraOutput = DelayedBytesIo("sample2.h264", 50000)
+        self.cameraOutput = FifoBufferOutput()
         
         if self.camera is None : 
             self.camera = picamera.PiCamera()
         self.camera.resolution = RES_VIDEO
         self.camera.framerate = CAM_FPS
-        debug("starting recording", name="camerawrapper")
-        self.camera.start_recording(self.camstream, format='h264', profile='baseline')
-        debug("recording didn't block", name="camerawrapper")
+        self.camera.start_recording(self.cameraOutput, format='h264', profile='baseline')
+        debug("recording didn't block", name="camerawrapper")            
         
-            # Multiprocess stuff
+            # Thread stuff
             #
         def _process_stream(bytesStream, streamsplitter) : 
             stamp("Starting  _process_stream")
@@ -91,19 +90,68 @@ class CameraWrapper :
                 stamp("CameraWrapper::_process_stream() : closed with Exception : \n"+repr(e))
                 exit()
                 
-        self.streamprocess = Thread(target=_process_stream, args=(self.camstream, self.streamsplitter))
-        self.streamprocess.daemon = True
-        self.streamprocess.start()
+        self.StreamProcessingThread = Thread(target=_process_stream, args=(self.cameraOutput, self.streamsplitter))
+        self.StreamProcessingThread.daemon = True
+        self.StreamProcessingThread.start()
 
 
-''' A socket-like, "file-like as far as picamera is concerned" object 
-    that can write the video stream from the camera and read it to the 
-    socket-streaming process in a FIFO manner.
+    def start_stream_coroutine (self, callbackFunction) :
+        
+        debug("start_stream_coroutine() called", name="camerawrapper")
+        
+        if not self.streamsplitter is None : 
+            stamp("CameraWrapper::stream_to_websocket() : streamsplitter exists already")
+            return
+        self.streamsplitter = StreamSplitter(STREAM_SEPARATOR, callbackFunction)
+        
+            # Coroutine stuff
+            #
+        def _process_stream_2 (streamsplitter) : 
+            chunk = (yield)
+            debug("Iterating coroutine", name="_process_stream_2")
+            streamsplitter.process(chunk)
+        
+        coroutine = _process_stream_2(self.streamsplitter)
+        next(coroutine)
+        
+        if not self.cameraOutput is None : 
+            stamp("CameraWrapper::stream_to_websocket() : cameraOutput is already opened")
+            return
+        self.cameraOutput = CoroutineCameraOutput(coroutine)
+        
+        if self.camera is None : 
+            self.camera = picamera.PiCamera()
+        self.camera.resolution = RES_VIDEO
+        self.camera.framerate = CAM_FPS
+        self.camera.start_recording(self.cameraOutput, format='h264', profile='baseline')
+        debug("recording didn't block", name="camerawrapper")
+
+
+''' A "file-like as far as picamera is concerned" object that forwards 
+    all data it receives to the coroutine passed during construction
+'''
+class CoroutineOutput : 
+    
+    def __init__ (self, coroutineFunction) :
+        self.coroutine = coroutineFunction
+    
+    def write (self, chunk) : 
+        debug("Writine to coroutine", name="CoroutineBytesIo")
+        self.coroutine.send(chunk)
+    
+    def flush (self) : 
+        stamp("Flushing -> calling .close() on coroutine", name="CoroutineBytesIo")
+        self.coroutine.close()
+
+
+''' A "file-like as far as picamera is concerned" object that can : 
+        (1) receive a bytes from the camera
+        (2) output those bytes in a FIFO manner by calling read()
     
     Source : 
         https://stackoverflow.com/questions/33395004/python-streamio-reading-and-writing-from-the-same-stream
 '''
-class FifoBytesIO : 
+class FifoBufferOutput : 
     
     def __init__(self, inputBytes=b''):
         self.buf = inputBytes
