@@ -43,12 +43,29 @@ class CameraWrapper :
             # most important for power saving
             self.camera.close()
             self.camera = None
-            stamp("    picamera closed", name="CameraWrapper") 
+            stamp("  | picamera closed", name="CameraWrapper") 
         if not self.cameraOutput is None : 
             self.cameraOutput = None
         if not self.streamsplitter is None : 
             self.streamsplitter = None
-        stamp("Done", name="CameraWrapper") 
+        stamp("Shutting down  ...  Done", name="CameraWrapper") 
+    
+    def photo(self) : 
+        debug("Capturing photo", name="CameraWrapper")
+        cameraWasNone=False
+        if self.camera is None : 
+            cameraWasNone=True
+            self.camera = picamera.PiCamera()
+            self.camera.resolution = RES_PHOTO   
+            time.sleep(CAM_WARMUP_TIME)
+        fileObject = io.BytesIO()
+        self.camera.capture(fileObject, format='jpeg', quality=PHOTO_QUALITY)
+        fileObject.seek(0)
+        debug("Capturing photo  ...  Done", name="CameraWrapper")
+        if cameraWasNone : 
+            stamp("BADLY IMPLEMENTED : create() / destroy() camera object", name="CameraWrapper")
+            self.shutdown()
+        return fileObject
 
     def start_stream (self, callbackFunction) : 
         self.start_stream_thread(callbackFunction)

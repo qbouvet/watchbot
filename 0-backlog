@@ -8,9 +8,6 @@ TODO
 
     app architecture for remote storage
     
-        debug the simplified architecture (streamsplitter as the output of picamera) with stackoverflow
-    Improve streaming architecture
-
             group conversation
             send photos with notifications
         telegram bot
@@ -25,7 +22,14 @@ TODO
             https://speckyboy.com/10-simple-code-snippets-creating-beautiful-tabs/
         tabbed layout
     proper webapp
-
+    
+        that unknown bug : https://sourceware.org/bugzilla/show_bug.cgi?id=19329
+        Proper exception management w/ telegram send timeouts (photo)
+        Thread / Coroutine issue == debug the simplified architecture (streamsplitter as the output of picamera) with stackoverflow
+        creation/destruction of the camerawrapper should be implemented with and incrementing/decrementing lock
+    QoL / bugs / stability / code improvement
+    
+    
 
 TESTING
 
@@ -34,8 +38,18 @@ TESTING
             try a proper coroutine architecture for stream_process
             fix "STOPSTREAM not received when stream running" bug 
         add graceful exit + ping client
+    QoL / bugs / stability / code improvement
+
 
 DONE
+            https://urllib3.readthedocs.io/en/latest/user-guide.html#using-timeouts
+            modified (~L270) /usr/lib/python3.7/site-packages/telegram/utils/request.py 
+                ^ This is the fix : set connect timeout to same timeout as receive timeout
+            modified  (~L70) /usr/lib/python3.7/site-packages/telegram/bot.py
+        Telegram : sending photos > 550ko timeout, regardless of the timeout parameter
+    bugs 
+
+    Send photo on movement detected + send photo on ping
 
             pure python / picamera stream version
             raspivid stream version

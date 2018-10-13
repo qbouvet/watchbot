@@ -17,9 +17,10 @@ from config import *
 
 def stamp(text, name=None, do_print=True ) : 
     now=datetime.datetime.now()
-    msg = "[{:02d}:{:02d}:{:02d}@{:02d}/{:02d}] ".format(now.hour, now.minute, now.second, now.day, now.month) 
+    #msg = "[{:02d}:{:02d}:{:02d}@{:02d}/{:02d}] ".format(now.hour, now.minute, now.second, now.day, now.month) 
+    msg = "[{:02d}:{:02d}:{:02d}] ".format(now.hour, now.minute, now.second) 
     if not name is None : 
-        msg = msg + "{:.<20} ".format(name)
+        msg = msg + "{:.<17} ".format(name)
     msg = msg + text
     if do_print : 
         print(msg, flush=True)

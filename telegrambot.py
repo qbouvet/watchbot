@@ -19,6 +19,8 @@ from utils import *
 """
     Telegram bot documentation : 
         https://github.com/python-telegram-bot/python-telegram-bot/wiki/Extensions-–-Your-first-Bot
+        https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#post-an-image-file-from-disk
+        https://python-telegram-bot.readthedocs.io/en/stable/
         
 	Author : Quentin Bouvet
 """
@@ -26,7 +28,7 @@ from utils import *
 
 class NotifyBot : 
     
-    def __init__(self) :         
+    def __init__(self, cameraWrapper) :         
         
             # create new user/object
         def __userobj(update) : 
@@ -34,8 +36,11 @@ class NotifyBot :
             userid = update.message.from_user.id
             username = update.message.from_user.username
             newr = {"conv" : convid, "user" : userid, "name" : username}
-            #newr = {"conv" : convid, "user" : userid}
+            debug("Telegram bot initialized new user object : \n\t"+str(newr))
             return newr
+        
+        def defaultuserobj() : 
+            return {'conv': 185940826, 'user': 185940826, 'name': 'sgpepper'}
         
         def start(bot, update) : 
             stamp("/start detected")
@@ -74,13 +79,18 @@ class NotifyBot :
         def ping(bot, update) :
             #wisdom = subprocess.check_output(["cowsay $(fortune)"])
             ip = str(get_pub_ip())
-            response = "Public ip : "+ip+"\nYou can stream at http://"+str(get_pub_ip())+":"+str(PORT)
+            response = "Hello frend. You can stream at : http://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] 192.168.1.47:8384"
             bot.send_message(chat_id=update.message.chat_id, text=response)
+            self.sendPhoto()
             return 
+        
+            # Camera wrapper
+        self.cameraWrapper = cameraWrapper
         
             # Conversation IDs to send notifications to
         self.bot = telegram.Bot(token=TGTOKEN)
         self.registered = []
+        self.registered.append(defaultuserobj())
             
             # updater polls telegram services and passes updates to dispatcher
         self.updater = Updater(token=TGTOKEN)
@@ -109,7 +119,15 @@ class NotifyBot :
         return res;
     
     def notify(self) : 
-        notification = "Activity has been detected. Your can stream at : http://"+str(get_pub_ip())+":"+str(PORT)
+        notification = "Activity has been detected. Check : http://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] 192.168.1.47:8384"
         for r in self.registered : 
             self.bot.send_message(chat_id=r["conv"], text="@"+str(r["name"])+"\n"+notification)
+    
+    def sendPhoto(self) : 
+        fileObject = self.cameraWrapper.photo()
+        stamp("sending photo", name="TelegramBot")
+        for r in self.registered : 
+            # send times V quality = 15->default, 40->17s, 50->20s, 75->30s, 100->30s
+            self.bot.send_photo(chat_id=r["conv"], photo=fileObject, timeout=PHOTO_SEND_TIMEOUT)
+        stamp("sending photo  ...  Done", name="TelegramBot")
 

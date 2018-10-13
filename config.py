@@ -15,16 +15,20 @@ DEBUG = True
 PIR_pin=11
 
     # Camera settings and file storage
+    # general
 dcim="/opt/dcim"
-CAM_WARMUP_TIME=0.6
-RES_PHOTO=(2592, 1944)
+CAM_WARMUP_TIME=0.2
+    # Photo
+RES_PHOTO=(1296, 972)
+PHOTO_QUALITY = 25
+    # Video
 RES_VIDEO=(1296, 972) 
-#RES_VIDEO=(640, 480) 
 CAM_FPS = 12
-CAM_QUALITY = 25
+CAM_QUALITY = 35
 
     # Telegram settings
 TGTOKEN='674761733:AAHF_pBnumgdXRR1SKe6psQLi1cmWu_AAd0'
+PHOTO_SEND_TIMEOUT=30
 
     # Webserver settings
 PORT=8384

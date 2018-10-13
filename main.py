@@ -15,22 +15,24 @@ from webserver import WebServerApp
 """
 
 
-stamp("Initializing main.py ...")
+stamp("Initializing ...")
 
-bot = NotifyBot()
+cam = CameraWrapper()
+stamp("(2/4) Camera wrapper initialized")
+
+bot = NotifyBot(cam)
 stamp("(1/4) Telegram bot ready")
 
 pir = PIRManager()
 pir.add_callback(lambda pinNumber : stamp("PIR sensor : activity detected"))
 pir.add_callback(lambda pinNumber : bot.notify())
-stamp("(2/4) PIR sensor ready")
-
-cam = CameraWrapper()
-stamp("(3/4) Camera wrapper initialized")
+pir.add_callback(lambda pinNumber : bot.sendPhoto())
+stamp("(3/4) PIR sensor ready")
 
 httpserver = WebServerApp(cam)
 httpserver.start()
 stamp("(4/4) Webserver ready")
+
 
 
 try:
