@@ -63,7 +63,7 @@ class DelayedBytesIo :
      
 
 def photo(camera, filename) : 
-    camera.resolution = RES_PHOTO
+    camera.resolution = PHOTO_RES
     camera.start_preview()
         # Camera warm-up time
     stamp("Warming up camera")
@@ -74,7 +74,7 @@ def photo(camera, filename) :
     stamp("Image has been captured\n")
 
 def video(camera, filename) : 
-    camera.resolution = RES_VIDEO
+    camera.resolution = VIDEO_RES
     camera.start_preview()
         # Camera warm-up time
     stamp("Warming up camera")

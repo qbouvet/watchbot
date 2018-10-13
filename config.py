@@ -17,14 +17,15 @@ PIR_pin=11
     # Camera settings and file storage
     # general
 dcim="/opt/dcim"
-CAM_WARMUP_TIME=0.2
+CAM_WARMUP_TIME=0.3
     # Photo
-RES_PHOTO=(1296, 972)
-PHOTO_QUALITY = 25
+PHOTO_RES=(1296, 972)
+PHOTO_QUALITY = 25          # 1-100
     # Video
-RES_VIDEO=(1296, 972) 
-CAM_FPS = 12
-CAM_QUALITY = 35
+VIDEO_RES=(1296, 972) 
+VIDEO_FPS = 12
+VIDEO_QUALITY = 20          # 1-40, "reasonable trade-off between bandwidth and quality being between 20 and 25."
+VIDEO_BITRATE = 12000000    # default 17000000, max 25000000
 
     # Telegram settings
 TGTOKEN='674761733:AAHF_pBnumgdXRR1SKe6psQLi1cmWu_AAd0'

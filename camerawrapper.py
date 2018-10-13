@@ -56,7 +56,7 @@ class CameraWrapper :
         if self.camera is None : 
             cameraWasNone=True
             self.camera = picamera.PiCamera()
-            self.camera.resolution = RES_PHOTO   
+            self.camera.resolution = PHOTO_RES   
             time.sleep(CAM_WARMUP_TIME)
         fileObject = io.BytesIO()
         self.camera.capture(fileObject, format='jpeg', quality=PHOTO_QUALITY)
@@ -88,9 +88,9 @@ class CameraWrapper :
         
         if self.camera is None : 
             self.camera = picamera.PiCamera()
-        self.camera.resolution = RES_VIDEO
-        self.camera.framerate = CAM_FPS
-        self.camera.start_recording(self.cameraOutput, format='h264', profile='baseline')
+        self.camera.resolution = VIDEO_RES
+        self.camera.framerate = VIDEO_FPS
+        self.camera.start_recording(self.cameraOutput, format='h264', profile='baseline', bitrate=VIDEO_BITRATE)
         debug("recording didn't block", name="camerawrapper")            
         
             # Thread stuff
@@ -102,7 +102,7 @@ class CameraWrapper :
                 while True : 
                     buffered = bytearray(bytesStream.read(CAMERA_WRAPPER_BUFFER_SIZE))
                     streamsplitter.process(buffered)
-                    time.sleep(0.5 * (1/CAM_FPS))
+                    time.sleep(0.5 * (1/VIDEO_FPS))
             except Exception as e : 
                 stamp("CameraWrapper::_process_stream() : closed with Exception : \n"+repr(e))
                 exit()
@@ -138,8 +138,8 @@ class CameraWrapper :
         
         if self.camera is None : 
             self.camera = picamera.PiCamera()
-        self.camera.resolution = RES_VIDEO
-        self.camera.framerate = CAM_FPS
+        self.camera.resolution = VIDEO_RES
+        self.camera.framerate = VIDEO_FPS
         self.camera.start_recording(self.cameraOutput, format='h264', profile='baseline')
         debug("recording didn't block", name="camerawrapper")
 

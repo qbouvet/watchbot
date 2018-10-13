@@ -69,14 +69,14 @@ class StreamHandler (WebSocketHandler) :
     def initialize(self, camerawrapper, **kwargs) : 
         super().initialize(**kwargs)
         '''    # fields for the raspivid stream version
-        self.xres, self.yres = RES_VIDEO
+        self.xres, self.yres = VIDEO_RES
         self.fps=CAM_FPS
         self.streamproc=None
         self.streamsplitter = StreamSplitter(stream_separator, self._write_binary)
         '''
             # fields for the camerawrapper stream version
-        self.xres, self.yres = RES_VIDEO
-        self.fps=CAM_FPS
+        self.xres, self.yres = VIDEO_RES
+        self.fps=VIDEO_FPS
         self.camera=camerawrapper
     
     def open(self):
