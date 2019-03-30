@@ -1,73 +1,99 @@
 TODO
 
-    general pi powersaving
+    PirManager
+       	sleep period pattern
 
-    fixed ip
-
-    LED powersave via gpio-controlled relay
+    camerawrapper
+        LED GPIO control via relay
+    
+    HLS / webRTC
 
     app architecture for remote storage
     
-            group conversation
-            send photos with notifications
-        telegram bot
-        camera : simultaneous photo + video
-        don't sleep() between frames
     Various uprioritized features 
-    
-        preset detection from user agent
-        client now sends the wanted quality preset
-        settings tab with multiple presets
+        don't sleep() between frames
+        camera : simultaneous photo + video
+        telegram bot
+            group conversation
+            send only photos with notifications
+            
+    proper webapp
+        tabbed layout
             https://codepen.io/dapacreative/pen/PqXxoP
             https://speckyboy.com/10-simple-code-snippets-creating-beautiful-tabs/
-        tabbed layout
-    proper webapp
+        quality presets 
+            settings tab with multiple presets
+            code : client now sends the wanted quality preset
+            preset detection from user agent
     
+    QoL / bugs / stability / code improvement
+        creation/destruction of the camerawrapper should be implemented with and incrementing/decrementing lock
+        Thread / Coroutine issue == debug the simplified architecture (streamsplitter as the output of picamera) with stackoverflow
         that unknown bug : https://sourceware.org/bugzilla/show_bug.cgi?id=19329
         Proper exception management w/ telegram send timeouts (photo)
-        Thread / Coroutine issue == debug the simplified architecture (streamsplitter as the output of picamera) with stackoverflow
-        creation/destruction of the camerawrapper should be implemented with and incrementing/decrementing lock
-    QoL / bugs / stability / code improvement
-    
-    
+
+
+
+
+########################################################################
 
 TESTING
 
+    QoL / bugs / stability / code improvement
+        add graceful exit + ping client
+            fix "STOPSTREAM not received when stream running" bug 
+            try a proper coroutine architecture for stream_process
             check for exceptions, exit properly
                 (camera callback = enqueue, coroutine = await dequeue)
-            try a proper coroutine architecture for stream_process
-            fix "STOPSTREAM not received when stream running" bug 
-        add graceful exit + ping client
-    QoL / bugs / stability / code improvement
 
+
+
+########################################################################
 
 DONE
+
+    general pi powersaving
+        https://www.jeffgeerling.com/blogs/jeff-geerling/raspberry-pi-zero-conserve-energy
+            HDMI - /opt/vc/bin/tvservice -o (-p to enable again)
+            LED - echo 'none' > /sys/class/leds/led0/trigger; echo '1' > /sys/class/leds/led0/brightness;
+             +--> /root/autostart.sh
+        Bluetooth --> /boot/config.txt
+        https://github.com/masneyb/weather-station/blob/master/bin/power-savings
+            powertop 
+                /usr/sbin/powertop --auto-tune
+            kernel modules
+                rmmod snd_bcm2835 snd_pcm snd_timer snd || true
+            allow CPU frequency range to go lower than default 700MHz
+                --> /boot/config.txt
+
+    fixed ip
+
+    bugs 
+        Telegram : sending photos > 550ko timeout, regardless of the timeout parameter
             https://urllib3.readthedocs.io/en/latest/user-guide.html#using-timeouts
             modified (~L270) /usr/lib/python3.7/site-packages/telegram/utils/request.py 
                 ^ This is the fix : set connect timeout to same timeout as receive timeout
             modified  (~L70) /usr/lib/python3.7/site-packages/telegram/bot.py
-        Telegram : sending photos > 550ko timeout, regardless of the timeout parameter
-    bugs 
 
     Send photo on movement detected + send photo on ping
 
-            pure python / picamera stream version
-            raspivid stream version
-            rewrite stream-split
-        convert websocket / streaming server to python
+    port git-h264-live-player to pure python       
+        Split nodejs code into httpserver and websocketserver     
         convert http server to python / tornado
-        Split nodejs code into httpserver and websocketserver
-    port git-h264-live-player to pure python
-
+        convert websocket / streaming server to python
+            rewrite stream-split
+            raspivid stream version
+            pure python / picamera stream version
+            
     register / ping over telegram bot
 
     "h264 streaming over http/websocket" Proof of concept from borrowed nodejs code
 
     Basic photo and video
 
+    PIR Sensor 
         multiple callback
         motion detection
-    PIR Sensor 
 
     3-setup-user.sh
 

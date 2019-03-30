@@ -22,6 +22,7 @@ from tornado import gen
     # homemade bits
 from utils import *
 from config import * 
+import config as cfg
 from streamsplitter import StreamSplitter
 from camerawrapper import CameraWrapper
 
@@ -53,7 +54,7 @@ class WebServerApp (Thread) :
             #,websocket_ping_interval=WS_PING_INTERVAL
             #,websocket_ping_timeout=WS_NB_PING_TIMEOUT
         )
-        self.port = 8384
+        self.port = cfg.PORT
         self.process = None
 
     def run (self) : 

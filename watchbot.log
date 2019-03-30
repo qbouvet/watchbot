@@ -1,0 +1,11 @@
+[15:31:42] Initializing ...
+[15:31:42] (2/4) Camera wrapper initialized
+[15:31:44] (1/4) Telegram bot ready
+[15:32:07] CameraWrapper.... Capturing photo
+[15:32:09] CameraWrapper.... Capturing photo  ...  Done
+[15:32:09] CameraWrapper.... BADLY IMPLEMENTED : create() / destroy() camera object
+[15:32:09] CameraWrapper.... Shutting down ...
+[15:32:09] CameraWrapper....   | picamera closed
+[15:32:09] CameraWrapper.... Shutting down  ...  Done
+[15:32:09] TelegramBot...... sending photo
+[15:32:13] TelegramBot...... sending photo  ...  Done

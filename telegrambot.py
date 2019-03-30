@@ -13,6 +13,7 @@ import os
 
     # Homemade bits
 from config import * 
+import config as cfg
 from utils import *
 
 
@@ -39,9 +40,6 @@ class NotifyBot :
             debug("Telegram bot initialized new user object : \n\t"+str(newr))
             return newr
         
-        def defaultuserobj() : 
-            return {'conv': 185940826, 'user': 185940826, 'name': 'sgpepper'}
-        
         def start(bot, update) : 
             stamp("/start detected")
                 # register
@@ -61,7 +59,7 @@ class NotifyBot :
             newr = __userobj(update)
             if newr in self.registered : 
                 self.registered.remove(newr)
-                response = "You've been unregistered for notifications. Currently registered are : \n " + str(self.convs)
+                response = "You've been unregistered for notifications. Currently registered are : \n " + str(self.registered_str())
             else : 
                 response = "It seems you're not currently registered Currently registered are : \n "+self.registered_str() 
             bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -81,7 +79,7 @@ class NotifyBot :
             ip = str(get_pub_ip())
             response = "Hello frend. You can stream at : http://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] 192.168.1.47:8384"
             bot.send_message(chat_id=update.message.chat_id, text=response)
-            self.sendPhoto()
+            self.sendPhoto(chat_id=update.message.chat_id)
             return 
         
             # Camera wrapper
@@ -90,7 +88,8 @@ class NotifyBot :
             # Conversation IDs to send notifications to
         self.bot = telegram.Bot(token=TGTOKEN)
         self.registered = []
-        self.registered.append(defaultuserobj())
+        for userobj in TG_DEFAULT_USERS : 
+            self.registered.append(userobj)
             
             # updater polls telegram services and passes updates to dispatcher
         self.updater = Updater(token=TGTOKEN)
@@ -111,6 +110,9 @@ class NotifyBot :
         
             # Start 
         self.updater.start_polling()
+        
+            # Notify default users
+        self.notifyStart()
     
     def registered_str(self) : 
         res = ""
@@ -118,16 +120,28 @@ class NotifyBot :
             res = res + str(r) + "\n"
         return res;
     
-    def notify(self) : 
-        notification = "Activity has been detected. Check : http://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] 192.168.1.47:8384"
+    def notifyStart(self) : 
+        notification = "Watchbot has started. Congratulations, you're a default user ! \n\nYou'll be notified if activity is detected. Send '/stop' to stop notifications. \n\nStreaming is available at :\nhttp://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] 192.168.1.51:8384"
+        cmdsstr = "Valid commands are :\n/start : to register for updates\n/stop : to stop receiving updates\n/ping : to ask for a picture\n/reboot : to restart the bot (you need to do it after streaming video)\n"
         for r in self.registered : 
-            self.bot.send_message(chat_id=r["conv"], text="@"+str(r["name"])+"\n"+notification)
+            self.bot.send_message(chat_id=r["conv"], text=notification)
+        for r in self.registered : 
+            self.bot.send_message(chat_id=r["conv"], text=cmdsstr)
     
-    def sendPhoto(self) : 
+    def notify(self) : 
+        notification = "Activity has been detected. Check : http://watchbot.ddns.net\n[WAN] http://"+str(get_pub_ip())+"\n[LAN] "+str(get_lan_ip())+":"+str(cfg.PORT)
+        for r in self.registered : 
+            self.bot.send_message(chat_id=r["conv"], text=notification)
+    
+    def sendPhoto(self, chat_id=None) : 
         fileObject = self.cameraWrapper.photo()
         stamp("sending photo", name="TelegramBot")
-        for r in self.registered : 
-            # send times V quality = 15->default, 40->17s, 50->20s, 75->30s, 100->30s
-            self.bot.send_photo(chat_id=r["conv"], photo=fileObject, timeout=PHOTO_SEND_TIMEOUT)
+        if chat_id is None : 
+            for r in self.registered : 
+                # send times V quality = 15->default, 40->17s, 50->20s, 75->30s, 100->30s
+                stamp("    | to "+str(r), name="TelegramBot")
+                self.bot.send_photo(chat_id=r["conv"], photo=fileObject, timeout=PHOTO_SEND_TIMEOUT)
+        else : 
+            self.bot.send_photo(chat_id=chat_id, photo=fileObject, timeout=PHOTO_SEND_TIMEOUT)
         stamp("sending photo  ...  Done", name="TelegramBot")
 

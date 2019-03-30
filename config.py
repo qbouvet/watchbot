@@ -11,25 +11,34 @@ import os
     # Enable printing debug information
 DEBUG = True
 
-    # PIR sensor GPIO configuration
-PIR_pin=11
+    # GPIO configuration
+PIR_pin=11          
+LEDSWITCH_PIN=17    
+PIR_CYCLE_PERIOD=15 # (in seconds)
+    # Sleep pattern for PIR activation : activate, sleep at least x[0], activate, sleep at least x[1], ...
+PIR_ACTIVATION_SEQUENCE=[4, 5, 10, 20, 30, 60] 
+
 
     # Camera settings and file storage
     # general
 dcim="/opt/dcim"
-CAM_WARMUP_TIME=0.3
+CAM_WARMUP_TIME=0.2
     # Photo
 PHOTO_RES=(1296, 972)
 PHOTO_QUALITY = 25          # 1-100
     # Video
 VIDEO_RES=(1296, 972) 
 VIDEO_FPS = 12
-VIDEO_QUALITY = 20          # 1-40, "reasonable trade-off between bandwidth and quality being between 20 and 25."
-VIDEO_BITRATE = 12000000    # default 17000000, max 25000000
+VIDEO_QUALITY = 30          # 1-40, "reasonable trade-off between bandwidth and quality being between 20 and 25."
+VIDEO_BITRATE = 9000000    # default 17000000, max 25000000
 
     # Telegram settings
 TGTOKEN='674761733:AAHF_pBnumgdXRR1SKe6psQLi1cmWu_AAd0'
 PHOTO_SEND_TIMEOUT=30
+#TG_DEFAULT_USERS=[  {'conv': 766567777, 'user': 766567777, 'name': 'el_olo'},
+#                    {'conv': 185940826, 'user': 185940826, 'name': 'sgpepper'},
+#                    {'conv': 668752478, 'user': 668752478, 'name': 'ldunoyer'} ]
+TG_DEFAULT_USERS=[ {'conv': 185940826, 'user': 185940826, 'name': 'sgpepper'} ]
 
     # Webserver settings
 PORT=8384

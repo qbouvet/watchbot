@@ -40,8 +40,19 @@ def get_pub_ip () :
         res = res[:-1]
     except Exception as e : 
         res = ''.join(["Could not obtain public ip : ", str(e)])
+        stamp ("ERROR : get_pub_ip() FAILED", name="utils")
     return res
 
+def get_lan_ip () : 
+    try : 
+        cmd = "ip addr | grep 'inet ' | grep -v '127.0.0.1'"
+        res = subprocess.check_output(cmd, shell=True)
+        res = res.decode('utf-8').split(" ")[5].split("/")[0]
+        stamp ("warning : get_lan_ip() is ugly", name="utils")
+    except Exception as e : 
+        res = ''.join(["Could not obtain lan ip : ", str(e)])
+        stamp ("ERROR : get_lan_ip() FAILED", name="utils")
+    return res
 
 ''' Simulates a video stream from a file by slowing the file read rate 
     to the specified bitrate.
