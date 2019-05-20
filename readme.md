@@ -19,7 +19,7 @@ works, there is still a lot of improvements to do (see backlog below).
 
 Hardware : 
 
-![](./imgs/watchbot-34.jpeg =300x600)
+<img src="./imgs/watchbot-34.jpeg" width="200">
 
 Software :
 
