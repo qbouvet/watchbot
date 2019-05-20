@@ -19,7 +19,7 @@ works, there is still a lot of improvements to do (see backlog below).
 
 Hardware : 
 
-![alt text](./imgs/watchbot-34.jpeg | height=200)
+![alt text](./imgs/watchbot-34.jpeg){:height="30%" width="30%"}
 
 Software :
 
