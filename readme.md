@@ -19,15 +19,15 @@ works, there is still a lot of improvements to do (see backlog below).
 
 Hardware : 
 
-<img src="./imgs/watchbot-34.jpeg" width="200">
+<img src="./imgs/watchbot-34.jpeg" width="300">
 
 Software :
 
-![alt text](./imgs/watchbot-telegram.jpg) 
+<img src="./imgs/watchbot-telegram.jpg" width="300"> 
 
 Hardware, detailed :
 
-![alt text](./imgs/watchbot-side-annot.jpg) 
+<img src="./imgs/watchbot-side-annot.jpg" width="300"> 
 
 
 
