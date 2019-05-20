@@ -18,12 +18,16 @@ works, there is still a lot of improvements to do (see backlog below).
 ## Photos
 
 Hardware : 
-![alt text](./imgs/watchbot-34.jpeg)
+
+![alt text](./imgs/watchbot-34.jpeg | height 200)
 
 Software :
+
 ![alt text](./imgs/watchbot-telegram.jpg) 
 
-Hardware, detailed : 
+Hardware, detailed :
+
+![alt text](./imgs/watchbot-side-annot.jpg) 
 
 
 
