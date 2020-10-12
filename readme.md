@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<p align="center">
   <img src="./imgs/main.jpg" width="300">
-</div>
+</p>
 
 ## Overview
 
@@ -13,13 +13,13 @@ users via a telegram bot. Current features :
 
 - Webserver for video streaming
 
-<div style="text-align:center">
+<p align="center">
   <img src="./imgs/all.jpg" width="900">
-</div>
+</p>
 
-<div style="text-align:center">
+<p align="center">
   <img src="./imgs/software.jpg" width="560">
-</div>
+</p>
 
 This project is currently a functionning proof-of-concept. It works, but 
 there is still a lot of improvements to do (see backlog below).
