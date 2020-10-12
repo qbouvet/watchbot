@@ -1,45 +1,43 @@
+<div style="text-align:center">
+  <img src="./imgs/main.jpg" width="300">
+</div>
+
 ## Overview
 
 This project implements a security camera that can communicate with its 
-users via a telegram bot. Its main features are :
+users via a telegram bot. Current features :
  
 - Presence detection with PIR sensor
 
-- Notification & photo sent via telegram on presence detection
+- Notification & photo sent via telegram upon presence detection
 
 - Webserver for video streaming
 
+<div style="text-align:center">
+  <img src="./imgs/all.jpg" width="900">
+</div>
 
-This project is currently a functionning proof-of-concept. While it 
-works, there is still a lot of improvements to do (see backlog below). 
-  
+<div style="text-align:center">
+  <img src="./imgs/software.jpg" width="560">
+</div>
 
-
-## Photos
-
-Hardware : 
-
-<img src="./imgs/watchbot-34.jpeg" width="300">
-
-Software :
-
-<img src="./imgs/watchbot-telegram.jpg" width="300"> 
-
-Hardware, detailed :
-
-<img src="./imgs/watchbot-side-annot.jpg" width="300"> 
-
+This project is currently a functionning proof-of-concept. It works, but 
+there is still a lot of improvements to do (see backlog below).
 
 
 ## Backlog
 
 
-#### TODO
+    ## TODO
     
     replace h264+http-live-player.js by HTTP live streaming or webRTC
 
-    implement client-server architecture, client sends video data only, 
-    server aggregates multiple client in a single http server
+    client-server architecture
+      Client sends activity / video data
+      server aggregates multiple clients
+        heartbeat for failure detection
+        streaming server aggregating all clients
+        grafana dashboard
     
     Various uprioritized features 
         camera : centralize access for simultaneous photo + video
@@ -65,7 +63,7 @@ Hardware, detailed :
 
 
 
-#### TESTING
+    ## TESTING
 
     PirManager
        	implement software activation pattern
@@ -79,7 +77,7 @@ Hardware, detailed :
 
 
 
-#### DONE
+    ## DONE
 
     general pi powersaving
         https://www.jeffgeerling.com/blogs/jeff-geerling/raspberry-pi-zero-conserve-energy
